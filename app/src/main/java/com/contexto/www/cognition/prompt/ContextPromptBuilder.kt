@@ -24,8 +24,16 @@ object ContextPromptBuilder {
            - NO_ACTION: {"action": "NO_ACTION"}
     """
 
-    fun build(snapshot: CurrentContextSnapshot, memories: List<String>): String {
-        val contextStr = StringBuilder().apply {
+    /**
+     * Returns the static portion of the prompt for Prefix Caching.
+     */
+    fun getSystemInstruction(): String = SYSTEM_INSTRUCTION
+
+    /**
+     * Builds the dynamic portion of the prompt containing real-time context and memories.
+     */
+    fun buildDynamicContext(snapshot: CurrentContextSnapshot, memories: List<String>): String {
+        return StringBuilder().apply {
             append("CURRENT CONTEXT:\n")
             append("- Activity: ${snapshot.activity.toFriendlyString()}\n")
             append("- Location: ${snapshot.location.toFriendlyString()}\n")
@@ -35,9 +43,12 @@ object ContextPromptBuilder {
                 append("\nRELEVANT MEMORIES:\n")
                 memories.forEach { append("- $it\n") }
             }
+            append("\nDECISION (JSON ONLY):")
         }.toString()
+    }
 
-        return "$SYSTEM_INSTRUCTION\n\n$contextStr\n\nDECISION (JSON ONLY):"
+    fun build(snapshot: CurrentContextSnapshot, memories: List<String>): String {
+        return "${getSystemInstruction()}\n\n${buildDynamicContext(snapshot, memories)}"
     }
 
     private fun UserActivity.toFriendlyString() = when (this) {
