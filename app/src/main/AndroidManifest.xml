@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    
+    <!-- Required for Do Not Disturb and Volume management -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:allowBackup="true"
@@ -29,6 +32,16 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location|microphone" />
+
+        <receiver
+            android:name=".execution.receiver.ActionVerificationReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.contexto.www.action.APPROVE" />
+                <action android:name="com.contexto.www.action.DENY" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

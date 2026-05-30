@@ -3,13 +3,11 @@ package com.contexto.www.execution.executor
 import com.contexto.www.cognition.model.AgentAction
 
 /**
- * Interface for executing a specific type of AgentAction.
- * Implementations will handle Android OS specifics (e.g., AudioManager, NotificationManager).
+ * Generic contract for executing agentic tools.
  */
-interface ActionExecutor {
+interface ActionExecutor<in T : AgentAction> {
     /**
-     * Executes the given action.
-     * @return true if the action was handled by this executor, false otherwise.
+     * Executes the specific command logic.
      */
-    suspend fun execute(action: AgentAction): Boolean
+    suspend fun execute(action: T)
 }
