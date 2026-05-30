@@ -1,26 +1,27 @@
 package com.contexto.www.perception.model
 
-/**
- * Aggregated snapshot of the user's current environment.
- * Used as the primary input for the Cognition Layer.
- */
+import androidx.annotation.Keep
+
+@Keep
 data class CurrentContextSnapshot(
-    val location: UserLocation = UserLocation.Unknown,
-    val activity: PhysicalActivity = PhysicalActivity.Unknown,
-    val ambientNoiseDb: Float = 0f,
-    val activeAppPackage: String? = null,
+    val location: LocationData = LocationData.Unknown,
+    val activity: UserActivity = UserActivity.Unknown,
+    val ambientNoiseDb: Int = 0,
     val timestamp: Long = System.currentTimeMillis()
 )
 
-sealed interface UserLocation {
-    data class Coordinates(val lat: Double, val lng: Double) : UserLocation
-    data object Unknown : UserLocation
+sealed interface LocationData {
+    data class Coordinates(
+        val latitude: Double,
+        val longitude: Double,
+        val accuracy: Float
+    ) : LocationData
+    data object Unknown : LocationData
 }
 
-sealed interface PhysicalActivity {
-    data object Stationary : PhysicalActivity
-    data object Walking : PhysicalActivity
-    data object Running : PhysicalActivity
-    data object Automotive : PhysicalActivity
-    data object Unknown : PhysicalActivity
+sealed interface UserActivity {
+    data object Stationary : UserActivity
+    data object Moving : UserActivity
+    data object Driving : UserActivity
+    data object Unknown : UserActivity
 }
